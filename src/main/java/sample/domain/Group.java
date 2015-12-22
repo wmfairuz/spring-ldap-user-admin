@@ -1,4 +1,4 @@
-package sample.model;
+package sample.domain;
 
 import java.util.HashSet;
 import java.util.Set;

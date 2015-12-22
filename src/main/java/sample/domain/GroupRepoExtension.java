@@ -1,8 +1,6 @@
-package sample.dao;
+package sample.domain;
 
 import java.util.List;
-
-import sample.model.Group;
 
 public interface GroupRepoExtension {
 	List<String> getAllGroupNames();

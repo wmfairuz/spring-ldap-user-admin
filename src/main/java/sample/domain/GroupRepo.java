@@ -1,4 +1,4 @@
-package sample.dao;
+package sample.domain;
 
 import java.util.Collection;
 
@@ -6,9 +6,9 @@ import javax.naming.Name;
 
 import org.springframework.ldap.repository.LdapRepository;
 import org.springframework.ldap.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import sample.model.Group;
-
+@Repository
 public interface GroupRepo extends LdapRepository<Group>, GroupRepoExtension {
     public final static String USER_GROUP = "ROLE_USER";
 

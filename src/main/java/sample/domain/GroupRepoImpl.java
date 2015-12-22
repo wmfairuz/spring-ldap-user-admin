@@ -1,4 +1,4 @@
-package sample.dao;
+package sample.domain;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
@@ -14,11 +14,9 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.BaseLdapNameAware;
 import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.support.LdapUtils;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-import sample.model.Group;
-
-@Component
+@Repository
 public class GroupRepoImpl implements GroupRepoExtension, BaseLdapNameAware {
     private final static LdapName ADMIN_USER = LdapUtils.newLdapName("cn=administrators,ou=System,ou=IT,ou=Departments");
 
