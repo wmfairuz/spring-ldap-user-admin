@@ -1,0 +1,12 @@
+debug: true
+
+server:
+  port: 9998
+   
+amba.ldap.contextSource:
+  url: ldap://127.0.0.1:33389
+  userDn: uid=admin,ou=system
+  password: secret
+  base: dc=springframework,dc=org
+  directory.type: NORMAL
+

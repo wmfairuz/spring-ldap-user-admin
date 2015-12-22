@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ldap-admin
+
+logging:
+  level:
+    org.springframework.cloud: 'DEBUG'   
+    org.springframework.security: DEBUG   
