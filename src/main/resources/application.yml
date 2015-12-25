@@ -4,9 +4,9 @@ server:
   port: 9998
    
 amba.ldap.contextSource:
-  url: ldap://127.0.0.1:33389
+  url: ldap://127.0.0.1:10389
   userDn: uid=admin,ou=system
   password: secret
-  base: dc=springframework,dc=org
+  base: dc=amba,dc=online
   directory.type: NORMAL
 
