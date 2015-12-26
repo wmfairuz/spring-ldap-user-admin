@@ -10,7 +10,6 @@ import javax.naming.directory.Attributes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
@@ -23,11 +22,8 @@ import org.springframework.security.authentication.encoding.LdapShaPasswordEncod
 import org.springframework.stereotype.Component;
 
 @Component
-public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
+public class LdapUserDaoImpl implements LdapUserDao<User> {
 	
-	@Value("${amba.ldap.contextSource.base:dc=amba,dc=online}")
-	private String BASE_DN;
-
 	@Autowired
 	@Qualifier(value = "ldapTemplate")
 	private LdapTemplate ldapTemplate;

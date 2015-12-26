@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import sample.domain.User;
+import sample.service.LdapGroupService;
 import sample.service.LdapUserService;
 
 @RestController
@@ -23,6 +24,9 @@ public class LdapUserController {
 	@Autowired
 	public LdapUserService ldapUserService;
 
+	@Autowired
+	public LdapGroupService ldapGroupService;
+	
 	@RequestMapping("/test/usernames")
 	@ResponseBody
 	public List<String> getUserNameList() {
@@ -103,6 +107,36 @@ public class LdapUserController {
 			ldapUserService.update(user);
 		} catch (NameNotFoundException e) {
 			log.error("User not found!!!");
+		} catch (Exception e) {
+			log.error("Something unknown happened >>> " + e.getClass().getName());
+			log.error("ERROR", e);
+		}
+		return user;
+	}
+	
+	@RequestMapping("/test/addgroup")
+	@ResponseBody
+	public User addMemberToGroup(@RequestParam(value="group") String group,
+			@RequestParam(value="uid", defaultValue="test.001") String uid) {
+		log.info("Testing user add to group");
+		
+		User user = null;
+		try {
+			User _user = new User(uid);
+			user = ldapUserService.findUser(_user);
+		} catch (NameNotFoundException e) {
+			log.error("User not found!!!");
+			log.error("ERROR", e);
+		} catch (Exception e) {
+			log.error("Something unknown happened >>> " + e.getClass().getName());
+			log.error("ERROR", e);
+		}
+		
+		try {
+			ldapGroupService.addMemberToGroup(group, user);
+		} catch (NameNotFoundException e) {
+			log.error("Group not found!!!");
+			log.error("ERROR", e);
 		} catch (Exception e) {
 			log.error("Something unknown happened >>> " + e.getClass().getName());
 			log.error("ERROR", e);
