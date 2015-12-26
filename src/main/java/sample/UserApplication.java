@@ -9,11 +9,11 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.BaseLdapPathBeanPostProcessor;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.ldap.repository.config.EnableLdapRepositories;
+import org.springframework.security.authentication.encoding.LdapShaPasswordEncoder;
 
 @SpringBootApplication
 @EnableConfigurationProperties
-@EnableLdapRepositories("sample.domain")
+//@EnableLdapRepositories("sample.domain")
 public class UserApplication {
 
     public static void main(String[] args) {
@@ -35,5 +35,10 @@ public class UserApplication {
     @Bean
     public LdapTemplate ldapTemplate(ContextSource contextSource) {
         return new LdapTemplate(contextSource);
+    }
+    
+    @Bean
+    public LdapShaPasswordEncoder ldapShaPasswordEncoder() {
+    	return new LdapShaPasswordEncoder();
     }
 }
