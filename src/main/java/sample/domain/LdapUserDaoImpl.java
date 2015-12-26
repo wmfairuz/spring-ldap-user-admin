@@ -7,8 +7,6 @@ import java.util.List;
 import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,10 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.security.authentication.encoding.LdapShaPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -65,19 +64,19 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 		}
 	}
 
-	private Attributes buildAttributes(User user) {
-		Attributes attrs = new BasicAttributes();
-		BasicAttribute ocattr = new BasicAttribute("objectclass");
-		ocattr.add("top");
-		ocattr.add("person");
-		ocattr.add("inetOrgPerson");
-		ocattr.add("organizationalPerson");
-		attrs.put(ocattr);
-		attrs.put("cn", user.getFullName());
-		attrs.put("sn", user.getLastName());
-		attrs.put("userPassword", ldapShaPasswordEncoder.encodePassword(user.getPassword(), null));
-		return attrs;
-	}
+//	private Attributes buildAttributes(User user) {
+//		Attributes attrs = new BasicAttributes();
+//		BasicAttribute ocattr = new BasicAttribute("objectclass");
+//		ocattr.add("top");
+//		ocattr.add("person");
+//		ocattr.add("inetOrgPerson");
+//		ocattr.add("organizationalPerson");
+//		attrs.put(ocattr);
+//		attrs.put("cn", user.getFullName());
+//		attrs.put("sn", user.getLastName());
+//		attrs.put("userPassword", ldapShaPasswordEncoder.encodePassword(user.getPassword(), null));
+//		return attrs;
+//	}
 
 	public List<String> getAllPersonNames() {
 		return ldapTemplate.search(
@@ -106,8 +105,16 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 	
 	public void create(User user) throws NameAlreadyBoundException {
 		Name dn = buildDn(user);
-		
-		ldapTemplate.bind(dn, null, buildAttributes(user));
+
+		// use DirContextAdapter instead of buildAttributes
+		DirContextAdapter context = new DirContextAdapter(dn);
+
+		context.setAttributeValues("objectclass", new String[] {"organizationalPerson", "inetOrgPerson", "top", "person"});
+		context.setAttributeValue("cn", user.getFullName());
+		context.setAttributeValue("sn", user.getLastName());
+		context.setAttributeValue("userPassword", ldapShaPasswordEncoder.encodePassword(user.getPassword(), null));
+
+		ldapTemplate.bind(context);
 	}
 	
 	public void delete(User user) throws NameNotFoundException {
