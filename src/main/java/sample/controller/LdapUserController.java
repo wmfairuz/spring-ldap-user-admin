@@ -88,4 +88,26 @@ public class LdapUserController {
 		return user;
 	}
 	
+	@RequestMapping("/test/userupdate")
+	@ResponseBody
+	public User updateUser(@RequestParam(value="lastname", defaultValue="test.001") String lastname,
+			@RequestParam(value="uid", defaultValue="test.001") String uid) {
+		log.info("Testing user update");
+		
+		User user = null;
+		try {
+			User _user = new User(uid);
+			user = ldapUserService.findUser(_user);
+			user.setLastName(lastname);
+			
+			ldapUserService.update(user);
+		} catch (NameNotFoundException e) {
+			log.error("User not found!!!");
+		} catch (Exception e) {
+			log.error("Something unknown happened >>> " + e.getClass().getName());
+			log.error("ERROR", e);
+		}
+		return user;
+	}
+	
 }

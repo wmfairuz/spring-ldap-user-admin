@@ -11,12 +11,14 @@ public interface LdapUserDao <T>{
 	
 	public List<User> getAllPersons();
 	
-	public User findUserByString(String dn);
+	public User findUserByString(String dn) throws NameNotFoundException;
 	
-	public User findUser(User user);
+	public User findUser(User user) throws NameNotFoundException;
 	
 	public void create(User user) throws NameAlreadyBoundException;
 	
 	public void delete(User user) throws NameNotFoundException;
+	
+	public void update(User user) throws NameNotFoundException;
 	
 }

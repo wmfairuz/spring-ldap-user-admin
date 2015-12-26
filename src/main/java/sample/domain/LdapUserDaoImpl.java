@@ -94,11 +94,11 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 				.where("objectclass").is("person"), new PersonAttributesMapper());
 	}
 
-	public User findUserByString(String dn) {
+	public User findUserByString(String dn) throws NameNotFoundException {
 		return ldapTemplate.lookup(dn, new PersonAttributesMapper());
 	}
 	
-	public User findUser(User user) {
+	public User findUser(User user) throws NameNotFoundException {
 		//return ldapTemplate.lookup(buildDn(user), new PersonAttributesMapper());
 		return ldapTemplate.lookup(buildDn(user), new PersonContextMapper());
 	}
@@ -121,6 +121,16 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 		Name dn = buildDn(user);
 		
 		ldapTemplate.unbind(dn);
+	}
+
+	public void update(User user) throws NameNotFoundException {
+		Name dn = buildDn(user);
+		DirContextOperations context = ldapTemplate.lookupContext(dn);
+
+		context.setAttributeValue("cn", user.getFullName());
+		context.setAttributeValue("sn", user.getLastName());
+
+		ldapTemplate.modifyAttributes(context);
 	}
 
 

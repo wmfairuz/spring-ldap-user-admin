@@ -24,11 +24,11 @@ public class LdapUserService {
 		return ldapUserDao.getAllPersons();
 	}
 	
-	public User findUserByString(String dn) {
+	public User findUserByString(String dn) throws NameNotFoundException {
 		return ldapUserDao.findUserByString(dn);
 	}
 	
-	public User findUser(User user) {
+	public User findUser(User user) throws NameNotFoundException {
 		return ldapUserDao.findUser(user);
 	}
 	
@@ -38,5 +38,9 @@ public class LdapUserService {
 	
 	public void delete(User user) throws NameNotFoundException {
 		ldapUserDao.delete(user);
+	}
+	
+	public void update(User user) throws NameNotFoundException {
+		ldapUserDao.update(user);
 	}
 }
