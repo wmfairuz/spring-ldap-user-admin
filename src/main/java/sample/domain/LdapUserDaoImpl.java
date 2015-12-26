@@ -64,6 +64,11 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 		}
 	}
 
+	private void mapToContext(User u, DirContextOperations context) {
+		context.setAttributeValue("cn", u.getFullName());
+		context.setAttributeValue("sn", u.getLastName());
+	}
+
 //	private Attributes buildAttributes(User user) {
 //		Attributes attrs = new BasicAttributes();
 //		BasicAttribute ocattr = new BasicAttribute("objectclass");
@@ -110,8 +115,7 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 		DirContextAdapter context = new DirContextAdapter(dn);
 
 		context.setAttributeValues("objectclass", new String[] {"organizationalPerson", "inetOrgPerson", "top", "person"});
-		context.setAttributeValue("cn", user.getFullName());
-		context.setAttributeValue("sn", user.getLastName());
+		mapToContext(user, context);
 		context.setAttributeValue("userPassword", ldapShaPasswordEncoder.encodePassword(user.getPassword(), null));
 
 		ldapTemplate.bind(context);
@@ -127,9 +131,7 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 		Name dn = buildDn(user);
 		DirContextOperations context = ldapTemplate.lookupContext(dn);
 
-		context.setAttributeValue("cn", user.getFullName());
-		context.setAttributeValue("sn", user.getLastName());
-
+		mapToContext(user, context);
 		ldapTemplate.modifyAttributes(context);
 	}
 
