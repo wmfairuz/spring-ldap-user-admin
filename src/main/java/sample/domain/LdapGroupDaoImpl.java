@@ -50,6 +50,15 @@ public class LdapGroupDaoImpl implements LdapGroupDao, BaseLdapNameAware {
 		ctx.addAttributeValue("uniqueMember", userDn);
 		ldapTemplate.modifyAttributes(ctx);		
 	}
+	
+	public void removeMemberFromGroup(String groupName, User user) {
+		Name groupDn = buildGroupDn(groupName);
+		Name userDn = buildUserDn(user.getUid());
+
+		DirContextOperations ctx = ldapTemplate.lookupContext(groupDn);
+		ctx.removeAttributeValue("uniqueMember", userDn);
+		ldapTemplate.modifyAttributes(ctx);		
+	}
 
 	
 }

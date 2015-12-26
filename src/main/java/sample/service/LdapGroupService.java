@@ -16,4 +16,8 @@ public class LdapGroupService {
 		ldapGroupDao.addMemberToGroup(groupName, user);
 	}
 	
+	public void removeMemberFromGroup(String groupName, User user) {
+		ldapGroupDao.removeMemberFromGroup(groupName, user);
+	}
+	
 }

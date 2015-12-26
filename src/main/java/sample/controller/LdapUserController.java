@@ -144,4 +144,34 @@ public class LdapUserController {
 		return user;
 	}
 	
+	@RequestMapping("/test/deletegroup")
+	@ResponseBody
+	public User removeMemberFromGroup(@RequestParam(value="group") String group,
+			@RequestParam(value="uid", defaultValue="test.001") String uid) {
+		log.info("Testing user add to group");
+		
+		User user = null;
+		try {
+			User _user = new User(uid);
+			user = ldapUserService.findUser(_user);
+		} catch (NameNotFoundException e) {
+			log.error("User not found!!!");
+			log.error("ERROR", e);
+		} catch (Exception e) {
+			log.error("Something unknown happened >>> " + e.getClass().getName());
+			log.error("ERROR", e);
+		}
+		
+		try {
+			ldapGroupService.removeMemberFromGroup(group, user);
+		} catch (NameNotFoundException e) {
+			log.error("Group not found!!!");
+			log.error("ERROR", e);
+		} catch (Exception e) {
+			log.error("Something unknown happened >>> " + e.getClass().getName());
+			log.error("ERROR", e);
+		}
+		return user;
+	}
+	
 }
