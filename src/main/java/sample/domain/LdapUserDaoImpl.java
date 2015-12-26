@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.security.authentication.encoding.LdapShaPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +51,17 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 			person.setLastName((String)attrs.get("sn").get());
 			person.setUid((String)attrs.get("uid").get());
 			return person;
+		}
+	}
+	
+	// use this or above. This one should be better
+	private static class PersonContextMapper extends AbstractContextMapper<User> {
+		public User doMapFromContext(DirContextOperations context) {
+			User p = new User();
+			p.setFullName(context.getStringAttribute("cn"));
+			p.setLastName(context.getStringAttribute("sn"));
+			p.setUid(context.getStringAttribute("uid"));
+			return p;
 		}
 	}
 
@@ -87,7 +100,8 @@ public class LdapUserDaoImpl implements LdapUserDao<LdapUser> {
 	}
 	
 	public User findUser(User user) {
-		return ldapTemplate.lookup(buildDn(user), new PersonAttributesMapper());
+		//return ldapTemplate.lookup(buildDn(user), new PersonAttributesMapper());
+		return ldapTemplate.lookup(buildDn(user), new PersonContextMapper());
 	}
 	
 	public void create(User user) throws NameAlreadyBoundException {

@@ -39,17 +39,18 @@ public class LdapUserController {
 	
 	@RequestMapping("/test/userlookup")
 	@ResponseBody
-	public User getUserByString() {
+	public User getUserByString(@RequestParam(value="uid", defaultValue="test.001") String uid) {
 		log.info("Testing user lookup using String Dn");
-		return ldapUserService.findUserByString("uid=fairuz.ismail,ou=people");
+		String str = "uid=" + uid + ",ou=people";
+		return ldapUserService.findUserByString(str);
 	}
 	
 	@RequestMapping("/test/userlookup2")
 	@ResponseBody
-	public User getUser() {
+	public User getUser(@RequestParam(value="uid", defaultValue="test.001") String uid) {
 		log.info("Testing user lookup");
 		User user = new User();
-		user.setUid("fairuz.ismail");
+		user.setUid(uid);
 		return ldapUserService.findUser(user);
 	}
 	
